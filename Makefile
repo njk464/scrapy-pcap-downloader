@@ -1,8 +1,8 @@
 # default, scraps web pages for pcaps, downloads them and transfers them to the correct directory
 .PHONY: all
 all:
-	scrapy crawl mta
 	scrapy crawl panda
+	scrapy crawl mta
 	sh transfer.sh
 
 # Transfers the files
