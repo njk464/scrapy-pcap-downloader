@@ -14,6 +14,12 @@ BOT_NAME = 'scrapy_downloader'
 SPIDER_MODULES = ['scrapy_downloader.spiders']
 NEWSPIDER_MODULE = 'scrapy_downloader.spiders'
 
+ITEM_PIPELINES = {'scrapy.pipelines.files.FilesPipeline': 1}
+
+FILES_STORE = '/home/nkantor/pcaps'
+
+FILES_EXPIRE = 120
+
 
 # Crawl responsibly by identifying yourself (and your website) on the user-agent
 #USER_AGENT = 'scrapy_downloader (+http://www.yourdomain.com)'

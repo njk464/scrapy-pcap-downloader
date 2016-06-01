@@ -1,10 +1,10 @@
 import scrapy
+from scrapy_downloader.items import myItem
 
-def to_pcap(url):
-    arr = url.split("/")
-    l = len(arr)
-    url = url[0:len(url) - 10] + arr[l-4] + "-" + arr[l-3] + "-" + arr[l-2] + ".pcap"
-    return url
+def join(url, ext):
+    while url[len(url)-1] != '/':
+        url = url[0:len(url)-1]
+    return url + ext
 class mta(scrapy.Spider):
     name = "mta"
     allowed_domains = ["malware-traffic-analysis.net"]
@@ -16,6 +16,14 @@ class mta(scrapy.Spider):
     ]
 
     def parse(self, response):
-        for href in response.xpath("//ul/li/a[@class='list_header']/@href"):
-            url = to_pcap(response.urljoin(href.extract()))
-            print url
+        for href in response.xpath("//ul/li/a[@class='list_header']/@href").extract():
+            yield scrapy.Request(join(response.url, href), callback=self.parse_url)
+
+    def parse_url(self, response):
+        # the xpath finds all hrefs that end with .pcap
+        # xpath v1 does not have ends-with(), had to create a work around
+        i = myItem()
+        i['file_urls'] = []
+        for href in response.xpath("//a[substring(@href,string-length(@href)-4)='.pcap']/@href").extract():
+            i['file_urls'].append(join(response.url, href))
+        yield i

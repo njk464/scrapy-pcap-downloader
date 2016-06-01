@@ -8,7 +8,7 @@
 import scrapy
 
 
-class ScrapyDownloaderItem(scrapy.Item):
+class myItem(scrapy.Item):
     # define the fields for your item here like:
-    url = scrapy.Field()
-    pass
+    file_urls = scrapy.Field()
+    files = scrapy.Field()
