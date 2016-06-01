@@ -15,5 +15,5 @@ transfer:
 install:
 	yum install python-devel.x86_64
 	python get-pip.py
-	pip --proxy=http://wwwproxy.sandia.gov:80 install --upgrade pip
-	pip --proxy=http://wwwproxy.sandia.gov:80 install scrapy
+	pip --upgrade pip
+	pip install scrapy
