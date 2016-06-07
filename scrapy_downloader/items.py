@@ -5,10 +5,10 @@
 # See documentation in:
 # http://doc.scrapy.org/en/latest/topics/items.html
 
-import scrapy
+from scrapy.item import Item, Field
 
 
-class myItem(scrapy.Item):
+class myItem(Item):
     # define the fields for your item here like:
-    file_urls = scrapy.Field()
-    files = scrapy.Field()
+    file_urls = Field()
+    files = Field()

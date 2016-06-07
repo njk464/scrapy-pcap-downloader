@@ -1,5 +1,8 @@
 import scrapy
 from scrapy_downloader.items import myItem
+from scrapy.spider import BaseSpider
+from scrapy.selector import HtmlXPathSelector
+from scrapy.http.Request import Request
 
 # joins the url and extension together
 def join(url, ext):
@@ -7,7 +10,7 @@ def join(url, ext):
         url = url[0:len(url)-1]
     return url + ext
 
-class mta(scrapy.Spider):
+class mta(BaseSpider):
     name = "mta"
     allowed_domains = ["malware-traffic-analysis.net"]
     start_urls = [
@@ -18,8 +21,9 @@ class mta(scrapy.Spider):
     ]
 
     def parse(self, response):
-        for href in response.xpath("//ul/li/a[@class='list_header']/@href").extract():
-            yield scrapy.Request(join(response.url, href), callback=self.parse_url)
+        hxs = HtmlXPathSelector(response)
+        for href in hxs.select("//ul/li/a[@class='list_header']/@href").extract():
+            yield Request(join(response.url, href), callback=self.parse_url)
 
     def parse_url(self, response):
         # the xpath finds all hrefs that end with .pcap
@@ -28,4 +32,4 @@ class mta(scrapy.Spider):
         i['file_urls'] = []
         for href in response.xpath("//a[substring(@href,string-length(@href)-4)='.pcap']/@href").extract():
             i['file_urls'].append(join(response.url, href))
-        yield i
+        print i['file_urls']

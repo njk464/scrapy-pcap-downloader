@@ -1,5 +1,7 @@
 import scrapy
 from scrapy_downloader.items import myItem
+from scrapy.spider import BaseSpider
+from scrapy.selector import HtmlXPathSelector
 
 # joins the url and extension together
 def join(url, ext):
@@ -7,7 +9,7 @@ def join(url, ext):
         url = url[0:len(url)-1]
     return url + ext
 
-class panda(scrapy.Spider):
+class panda(BaseSpider):
     name = "panda"
     allowed_domains = ["panda.gtisc.gatech.edu"]
     start_urls = [
@@ -19,5 +21,5 @@ class panda(scrapy.Spider):
         i['file_urls'] = []
         for href in response.xpath("//a[substring(@href,string-length(@href)-4)='.pcap']/@href").extract():
             i['file_urls'].append(join(response.url, href))
-        yield i
+        print i
 
